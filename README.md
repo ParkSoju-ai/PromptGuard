@@ -7,6 +7,8 @@ PromptGuard scans text *before* you paste it into ChatGPT, Claude, Gemini, Copil
 > No server. No backend. No cloud API. No analytics. No cookies. No tracking.
 > It's just `index.html`, three small JS modules, and your browser's JavaScript engine.
 
+
+https://parksoju-ai.github.io/PromptGuard/
 ---
 
 ## Table of Contents
