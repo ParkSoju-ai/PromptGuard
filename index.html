@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PromptGuard — Offline AI Prompt Privacy Scanner</title>
+<meta name="description" content="Scan prompts for secrets and PII entirely in your browser before sending them to ChatGPT, Claude, Gemini, Copilot, Grok or DeepSeek. 100% offline, no servers, no tracking.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================== HEADER ============================== -->
+<header class="pg-header">
+  <div class="pg-header-inner">
+    <div class="pg-brand">
+      <span class="pg-brand-mark" aria-hidden="true">[ ⟡ ]</span>
+      <div class="pg-brand-text">
+        <span class="pg-brand-name">PromptGuard</span>
+        <span class="pg-brand-tag">local prompt scanner</span>
+      </div>
+    </div>
+
+    <div class="pg-header-right">
+      <span class="pg-offline-badge" title="Nothing ever leaves this browser tab">
+        <span class="pg-dot"></span> 100% Offline · No Servers · No Tracking
+      </span>
+      <button id="darkModeToggle" class="pg-icon-btn" type="button" aria-label="Toggle dark mode">
+        <span id="darkModeIcon">🌙</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================== MAIN ============================== -->
+<main class="pg-main">
+
+  <!-- ---------- LEFT: INPUT PANEL ---------- -->
+  <section class="pg-panel pg-input-panel" aria-labelledby="inputHeading">
+    <div class="pg-panel-head">
+      <h2 id="inputHeading">01 — Input</h2>
+      <span class="pg-panel-sub">Paste a prompt, or drop a .txt / .md / .log / .json file</span>
+    </div>
+
+    <div id="dropZone" class="pg-drop-zone">
+      <textarea
+        id="promptInput"
+        class="pg-textarea"
+        placeholder="Paste the prompt you're about to send to ChatGPT, Claude, Gemini, Copilot, Grok or DeepSeek...&#10;&#10;Or drag &amp; drop a .txt, .md, .log or .json file here."
+        spellcheck="false"
+      ></textarea>
+      <div id="dropOverlay" class="pg-drop-overlay">
+        <div class="pg-drop-overlay-inner">⤓ Drop file to scan</div>
+      </div>
+    </div>
+    <input type="file" id="fileInput" accept=".txt,.md,.log,.json" hidden>
+
+    <div class="pg-stats-bar">
+      <div class="pg-stat"><span id="charCount">0</span><label>characters</label></div>
+      <div class="pg-stat"><span id="wordCount">0</span><label>words</label></div>
+      <div class="pg-stat"><span id="tokenCount">0</span><label>~tokens</label></div>
+      <div class="pg-stat"><span id="lineCount">0</span><label>lines</label></div>
+    </div>
+
+    <div class="pg-actions">
+      <button id="scanBtn" class="pg-btn pg-btn-primary" type="button">
+        <span class="pg-btn-icon">▶</span> SCAN
+      </button>
+      <button id="redactBtn" class="pg-btn pg-btn-secondary" type="button" disabled>REDACT</button>
+      <button id="loadFileBtn" class="pg-btn pg-btn-ghost" type="button">Choose File…</button>
+      <button id="clearBtn" class="pg-btn pg-btn-ghost" type="button">Clear</button>
+    </div>
+
+    <div id="redactedSection" class="pg-redacted-section" hidden>
+      <div class="pg-panel-head">
+        <h3>Redacted Output</h3>
+        <button id="copyRedactedBtn" class="pg-btn pg-btn-small" type="button">Copy Redacted</button>
+      </div>
+      <textarea id="redactedOutput" class="pg-textarea pg-textarea-readonly" readonly spellcheck="false"></textarea>
+    </div>
+  </section>
+
+  <!-- ---------- RIGHT: RESULTS PANEL ---------- -->
+  <section class="pg-panel pg-results-panel" aria-labelledby="resultsHeading">
+    <div class="pg-panel-head">
+      <h2 id="resultsHeading">02 — Scan Results</h2>
+      <span class="pg-panel-sub">Everything below is computed locally in this tab</span>
+    </div>
+
+    <!-- Empty state -->
+    <div id="emptyState" class="pg-empty-state">
+      <div class="pg-empty-icon">⟡</div>
+      <p>No scan yet. Paste a prompt and press <strong>SCAN</strong>.</p>
+    </div>
+
+    <!-- Score + summary (hidden until a scan runs) -->
+    <div id="resultsContent" class="pg-results-content" hidden>
+
+      <div class="pg-score-row">
+        <div class="pg-score-card">
+          <svg class="pg-score-ring" viewBox="0 0 120 120" width="120" height="120">
+            <circle class="pg-score-ring-bg" cx="60" cy="60" r="52"></circle>
+            <circle id="scoreRingFg" class="pg-score-ring-fg" cx="60" cy="60" r="52"></circle>
+          </svg>
+          <div class="pg-score-readout">
+            <span id="scoreValue">100</span>
+            <small>/ 100</small>
+          </div>
+          <div id="scoreLabel" class="pg-score-label">Safe</div>
+        </div>
+
+        <div class="pg-summary-grid">
+          <div class="pg-summary-tile">
+            <span id="findingsCountValue">0</span>
+            <label>Findings</label>
+          </div>
+          <div class="pg-summary-tile">
+            <span id="categoriesCountValue">0</span>
+            <label>Categories</label>
+          </div>
+          <div class="pg-summary-tile">
+            <span id="criticalCountValue">0</span>
+            <label>Critical</label>
+          </div>
+          <div class="pg-summary-tile">
+            <span id="highCountValue">0</span>
+            <label>High</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="pg-export-row">
+        <button id="downloadJsonBtn" class="pg-btn pg-btn-small" type="button">⬇ JSON Report</button>
+        <button id="downloadTxtBtn" class="pg-btn pg-btn-small" type="button">⬇ TXT Report</button>
+      </div>
+
+      <div class="pg-findings-head">
+        <h3>Findings</h3>
+        <span id="findingsHint" class="pg-panel-sub"></span>
+      </div>
+      <div id="findingsList" class="pg-findings-list"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="pg-footer">
+  <p>PromptGuard runs entirely client-side — view source, host it yourself, or open <code>index.html</code> offline. No data ever leaves this browser tab.</p>
+</footer>
+
+<!-- Modular scripts: patterns → risk → redactor → app -->
+<script src="patterns.js"></script>
+<script src="risk.js"></script>
+<script src="redactor.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
