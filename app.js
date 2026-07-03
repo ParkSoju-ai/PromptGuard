@@ -51,6 +51,7 @@
   const scoreValue = el('scoreValue');
   const scoreLabel = el('scoreLabel');
   const scoreRingFg = el('scoreRingFg');
+  const scoreStamp = el('scoreStamp');
 
   const findingsCountValue = el('findingsCountValue');
   const categoriesCountValue = el('categoriesCountValue');
@@ -209,6 +210,19 @@
     }
   }
 
+  /** Maps a score band's color to the word stamped on the case file, and to
+   * the stamp's own severity coloring (only red/yellow/green ink exist). */
+  function stampForBand(color) {
+    switch (color) {
+      case 'green': return { word: 'Clear', sev: 'sev-green' };
+      case 'yellow-green': return { word: 'Minor', sev: 'sev-green' };
+      case 'yellow': return { word: 'Review', sev: 'sev-yellow' };
+      case 'orange': return { word: 'High Risk', sev: 'sev-yellow' };
+      case 'red': return { word: 'Critical', sev: 'sev-red' };
+      default: return { word: 'Clear', sev: 'sev-green' };
+    }
+  }
+
   function renderScore(scoreResult) {
     scoreValue.textContent = scoreResult.score;
     scoreLabel.textContent = scoreResult.label;
@@ -218,6 +232,13 @@
     scoreRingFg.style.strokeDasharray = String(SCORE_RING_CIRCUMFERENCE);
     scoreRingFg.style.strokeDashoffset = String(offset);
     scoreRingFg.style.stroke = severityRingColor(scoreResult.color);
+
+    const stamp = stampForBand(scoreResult.color);
+    scoreStamp.textContent = stamp.word;
+    scoreStamp.classList.remove('sev-red', 'sev-yellow', 'sev-green', 'is-stamped');
+    // Force a reflow so the drop animation replays on every scan, not just the first.
+    void scoreStamp.offsetWidth;
+    scoreStamp.classList.add(stamp.sev, 'is-stamped');
   }
 
   function renderSummary(findings) {
@@ -256,12 +277,23 @@
           '<span class="pg-finding-category">' + escapeHtml(finding.category) + '</span>' +
           '<span class="pg-severity-chip sev-' + color + '">' + escapeHtml(finding.severity) + '</span>' +
         '</div>' +
-        '<div class="pg-finding-value">' + escapeHtml(truncate(finding.match, 160)) + '</div>' +
+        '<button type="button" class="pg-finding-value" aria-pressed="false">' +
+          '<span class="pg-value-text">' + escapeHtml(truncate(finding.match, 160)) + '</span>' +
+        '</button>' +
         '<div class="pg-finding-meta">Line ' + finding.line + '</div>' +
         '<div class="pg-finding-reco"><strong>Recommendation:</strong> ' + escapeHtml(finding.recommendation) + '</div>';
       findingsList.appendChild(card);
     }
   }
+
+  /** Click-to-reveal for redaction bars: matched values start hidden under a
+   * solid bar (event delegation, since cards are re-rendered on every scan). */
+  findingsList.addEventListener('click', (e) => {
+    const btn = e.target.closest('.pg-finding-value');
+    if (!btn) return;
+    const revealed = btn.classList.toggle('is-revealed');
+    btn.setAttribute('aria-pressed', String(revealed));
+  });
 
   function triggerScanBeam() {
     dropZone.classList.add('pg-scanning');
@@ -321,6 +353,7 @@
     resultsContent.hidden = true;
     redactedSection.hidden = true;
     redactBtn.disabled = true;
+    scoreStamp.classList.remove('sev-red', 'sev-yellow', 'sev-green', 'is-stamped');
     promptInput.focus();
   }
 
