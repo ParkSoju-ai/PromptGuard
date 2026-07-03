@@ -10,32 +10,35 @@
 </head>
 <body>
 
-<!-- ============================== HEADER ============================== -->
+<div class="pg-grain" aria-hidden="true"></div>
+
 <header class="pg-header">
   <div class="pg-header-inner">
     <div class="pg-brand">
-      <span class="pg-brand-mark" aria-hidden="true">[ ⟡ ]</span>
+      <span class="pg-brand-mark" aria-hidden="true">⟡</span>
       <div class="pg-brand-text">
         <span class="pg-brand-name">PromptGuard</span>
-        <span class="pg-brand-tag">local prompt scanner</span>
+        <span class="pg-brand-tag">Case File Ed. — Local Prompt Scanner</span>
       </div>
     </div>
 
     <div class="pg-header-right">
-      <button id="darkModeToggle" class="pg-icon-btn" type="button" aria-label="Toggle dark mode">
+      <span class="pg-offline-badge" title="Nothing ever leaves this browser tab">
+        <span class="pg-dot"></span> Offline · No Servers · No Tracking
+      </span>
+      <button id="darkModeToggle" class="pg-icon-btn" type="button" aria-label="Toggle desk lamp / daylight mode">
         <span id="darkModeIcon">🌙</span>
       </button>
     </div>
   </div>
 </header>
 
-<!-- ============================== MAIN ============================== -->
 <main class="pg-main">
 
-  <!-- ---------- LEFT: INPUT PANEL ---------- -->
   <section class="pg-panel pg-input-panel" aria-labelledby="inputHeading">
     <div class="pg-panel-head">
-      <h2 id="inputHeading">01 — Input</h2>
+      <span class="pg-exhibit-tag">Exhibit A</span>
+      <h2 id="inputHeading">Input</h2>
       <span class="pg-panel-sub">Paste a prompt, or drop a .txt / .md / .log / .json file</span>
     </div>
 
@@ -61,36 +64,37 @@
 
     <div class="pg-actions">
       <button id="scanBtn" class="pg-btn pg-btn-primary" type="button">
-        <span class="pg-btn-icon">▶</span> SCAN
+        <span class="pg-btn-icon">▶</span> Scan prompt
       </button>
-      <button id="redactBtn" class="pg-btn pg-btn-secondary" type="button" disabled>REDACT</button>
-      <button id="loadFileBtn" class="pg-btn pg-btn-ghost" type="button">Choose File…</button>
+      <button id="redactBtn" class="pg-btn pg-btn-secondary" type="button" disabled>Redact</button>
+      <button id="loadFileBtn" class="pg-btn pg-btn-ghost" type="button">Choose file…</button>
       <button id="clearBtn" class="pg-btn pg-btn-ghost" type="button">Clear</button>
     </div>
 
     <div id="redactedSection" class="pg-redacted-section" hidden>
-      <div class="pg-panel-head">
-        <h3>Redacted Output</h3>
-        <button id="copyRedactedBtn" class="pg-btn pg-btn-small" type="button">Copy Redacted</button>
+      <div class="pg-panel-head pg-panel-head-row">
+        <div>
+          <span class="pg-exhibit-tag">Exhibit A-1</span>
+          <h3>Redacted copy</h3>
+        </div>
+        <button id="copyRedactedBtn" class="pg-btn pg-btn-small" type="button">Copy redacted</button>
       </div>
       <textarea id="redactedOutput" class="pg-textarea pg-textarea-readonly" readonly spellcheck="false"></textarea>
     </div>
   </section>
 
-  <!-- ---------- RIGHT: RESULTS PANEL ---------- -->
   <section class="pg-panel pg-results-panel" aria-labelledby="resultsHeading">
     <div class="pg-panel-head">
-      <h2 id="resultsHeading">02 — Scan Results</h2>
+      <span class="pg-exhibit-tag">Exhibit B</span>
+      <h2 id="resultsHeading">Findings log</h2>
       <span class="pg-panel-sub">Everything below is computed locally in this tab</span>
     </div>
 
-    <!-- Empty state -->
     <div id="emptyState" class="pg-empty-state">
-      <div class="pg-empty-icon">⟡</div>
-      <p>No scan yet. Paste a prompt and press <strong>SCAN</strong>.</p>
+      <div class="pg-empty-icon" aria-hidden="true">⟡</div>
+      <p>No case open yet. Paste a prompt and press <strong>Scan prompt</strong>.</p>
     </div>
 
-    <!-- Score + summary (hidden until a scan runs) -->
     <div id="resultsContent" class="pg-results-content" hidden>
 
       <div class="pg-score-row">
@@ -104,6 +108,7 @@
             <small>/ 100</small>
           </div>
           <div id="scoreLabel" class="pg-score-label">Safe</div>
+          <div id="scoreStamp" class="pg-stamp" aria-hidden="true">Clear</div>
         </div>
 
         <div class="pg-summary-grid">
@@ -127,14 +132,15 @@
       </div>
 
       <div class="pg-export-row">
-        <button id="downloadJsonBtn" class="pg-btn pg-btn-small" type="button">⬇ JSON Report</button>
-        <button id="downloadTxtBtn" class="pg-btn pg-btn-small" type="button">⬇ TXT Report</button>
+        <button id="downloadJsonBtn" class="pg-btn pg-btn-small" type="button">⬇ JSON report</button>
+        <button id="downloadTxtBtn" class="pg-btn pg-btn-small" type="button">⬇ TXT report</button>
       </div>
 
       <div class="pg-findings-head">
         <h3>Findings</h3>
         <span id="findingsHint" class="pg-panel-sub"></span>
       </div>
+      <p class="pg-reveal-hint">Values are redacted on sight — click a black bar to peek at what was matched.</p>
       <div id="findingsList" class="pg-findings-list"></div>
     </div>
   </section>
@@ -144,7 +150,6 @@
   <p>PromptGuard runs entirely client-side — view source, host it yourself, or open <code>index.html</code> offline. No data ever leaves this browser tab.</p>
 </footer>
 
-<!-- Modular scripts: patterns → risk → redactor → app -->
 <script src="patterns.js"></script>
 <script src="risk.js"></script>
 <script src="redactor.js"></script>
