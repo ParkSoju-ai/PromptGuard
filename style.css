@@ -1,66 +1,85 @@
 /* ============================================================================
    PromptGuard — style.css
-   Design language: an offline security-scanner dashboard. Monospace accents
-   for data/readouts, a quiet sans-serif for prose, a deep near-black surface
-   by default with a single cool accent, and severity colors (green/yellow/
-   red) that carry real meaning rather than decoration.
+   Design language: an "evidence dossier" for your prompts. A desk-lamp-lit
+   case file at night (default) or a sunlit desk review (light mode toggle).
+   Typewriter mono for stamps, data, and structure; a quiet sans for prose.
+   Severity reads as ink-stamp color, not decoration — red/amber/green carry
+   real meaning. Sensitive values stay redacted under a black bar until
+   clicked, the same discipline the tool is asking of you.
 
    Fonts are intentionally system-only — no external font requests — so the
    "100% offline" promise holds even at the typography layer.
    ============================================================================ */
 
 :root {
-  /* ---- Core palette (dark, default) ---- */
-  --bg-void: #0a0e14;
-  --bg-surface: #11161f;
-  --bg-surface-2: #161d29;
-  --bg-input: #0d1219;
-  --border: #232c3a;
-  --border-soft: #1a2230;
+  /* ---- Case-file palette (ink / night desk, default) ---- */
+  --ink: #0b0d10;
+  --ink-surface: #14171c;
+  --ink-surface-2: #1a1e25;
+  --ink-input: #0f1216;
+  --border: #2a2f38;
+  --border-soft: #1f242c;
 
-  --text-primary: #e7edf5;
-  --text-muted: #8b98ab;
-  --text-faint: #5c6779;
+  --text-primary: #e9e6dc;
+  --text-muted: #93927f;
+  --text-faint: #5f6266;
 
-  --accent-brand: #5b8cff;
-  --accent-brand-soft: rgba(91, 140, 255, 0.14);
+  --paper: #e8e1cf;
+  --paper-soft: rgba(232, 225, 207, 0.08);
 
-  --severity-green: #00d68f;
-  --severity-green-soft: rgba(0, 214, 143, 0.12);
-  --severity-yellow: #ffb020;
-  --severity-yellow-soft: rgba(255, 176, 32, 0.12);
-  --severity-red: #ff4757;
-  --severity-red-soft: rgba(255, 71, 87, 0.12);
+  --accent-brand: #5b7fd9;
+  --accent-brand-soft: rgba(91, 127, 217, 0.14);
+
+  --severity-green: #4fa377;
+  --severity-green-soft: rgba(79, 163, 119, 0.14);
+  --severity-yellow: #d9a441;
+  --severity-yellow-soft: rgba(217, 164, 65, 0.14);
+  --severity-red: #c1444a;
+  --severity-red-soft: rgba(193, 68, 74, 0.16);
+
+  --redaction-bar: #101114;
 
   --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Consolas, Menlo, monospace;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
 
-  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.02) inset, 0 8px 24px rgba(0, 0, 0, 0.28);
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.02) inset, 0 10px 28px rgba(0, 0, 0, 0.4);
   color-scheme: dark;
 }
 
+/* ---- Sunlit desk (light mode) — a manila-folder review, not a generic
+   light theme: warm paper surfaces, ink-brown text, stamps read darker. ---- */
 body.pg-light {
-  --bg-void: #f3f5f8;
-  --bg-surface: #ffffff;
-  --bg-surface-2: #f0f2f6;
-  --bg-input: #fbfcfe;
-  --border: #dde3ec;
-  --border-soft: #e7ebf1;
+  --ink: #ece5d3;
+  --ink-surface: #f7f2e4;
+  --ink-surface-2: #efe8d6;
+  --ink-input: #fbf8ee;
+  --border: #d8cca9;
+  --border-soft: #e3d8bb;
 
-  --text-primary: #11161f;
-  --text-muted: #5a6577;
-  --text-faint: #8993a3;
+  --text-primary: #221d12;
+  --text-muted: #6b6046;
+  --text-faint: #9a8f6d;
 
-  --accent-brand-soft: rgba(91, 140, 255, 0.10);
-  --severity-green-soft: rgba(0, 168, 112, 0.10);
-  --severity-yellow-soft: rgba(184, 122, 0, 0.10);
-  --severity-red-soft: rgba(217, 48, 63, 0.10);
+  --paper: #fffdf6;
+  --paper-soft: rgba(34, 29, 18, 0.04);
 
-  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 8px 20px rgba(20, 30, 50, 0.07);
+  --accent-brand: #33509e;
+  --accent-brand-soft: rgba(51, 80, 158, 0.10);
+
+  --severity-green: #2f7a52;
+  --severity-green-soft: rgba(47, 122, 82, 0.12);
+  --severity-yellow: #a5711c;
+  --severity-yellow-soft: rgba(165, 113, 28, 0.12);
+  --severity-red: #a3272c;
+  --severity-red-soft: rgba(163, 39, 44, 0.12);
+
+  --redaction-bar: #221d12;
+
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 10px 22px rgba(90, 70, 30, 0.10);
   color-scheme: light;
 }
 
@@ -71,19 +90,34 @@ body.pg-light {
 html, body {
   margin: 0;
   padding: 0;
-  background: var(--bg-void);
+  background: var(--ink);
   color: var(--text-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 body {
+  position: relative;
   background-image:
-    radial-gradient(circle at 15% 0%, var(--accent-brand-soft), transparent 45%),
-    radial-gradient(circle at 100% 15%, rgba(0, 214, 143, 0.06), transparent 40%);
+    radial-gradient(circle at 12% -6%, var(--accent-brand-soft), transparent 42%),
+    radial-gradient(ellipse at 100% 0%, var(--paper-soft), transparent 38%);
   background-attachment: fixed;
   min-height: 100vh;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
+
+/* Fine paper-grain overlay: an inline SVG turbulence filter, no network
+   request, applied at very low opacity so it reads as texture not noise. */
+.pg-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+body.pg-light .pg-grain { opacity: 0.05; mix-blend-mode: multiply; }
 
 a { color: var(--accent-brand); }
 
@@ -96,61 +130,75 @@ input:focus-visible {
 
 /* ============================== HEADER ============================== */
 .pg-header {
-  border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--bg-surface) 88%, transparent);
-  backdrop-filter: blur(8px);
   position: sticky;
   top: 0;
   z-index: 20;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--ink-surface) 90%, transparent);
+  backdrop-filter: blur(10px);
 }
 .pg-header-inner {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 14px 24px;
+  padding: 16px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
 }
-.pg-brand { display: flex; align-items: center; gap: 10px; }
+.pg-brand { display: flex; align-items: center; gap: 12px; }
 .pg-brand-mark {
   font-family: var(--font-mono);
-  color: var(--accent-brand);
+  color: var(--ink);
+  background: var(--text-primary);
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 14px;
-  letter-spacing: 1px;
+  border-radius: var(--radius-sm);
+  transform: rotate(-4deg);
 }
-.pg-brand-text { display: flex; flex-direction: column; line-height: 1.1; }
-.pg-brand-name { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+.pg-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.pg-brand-name {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
 .pg-brand-tag { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.03em; }
 
 .pg-header-right { display: flex; align-items: center; gap: 14px; }
 .pg-offline-badge {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 11px;
   color: var(--severity-green);
   background: var(--severity-green-soft);
-  border: 1px solid color-mix(in srgb, var(--severity-green) 35%, transparent);
+  border: 1px solid color-mix(in srgb, var(--severity-green) 40%, transparent);
   padding: 6px 10px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 .pg-dot {
   width: 6px; height: 6px; border-radius: 50%;
   background: var(--severity-green);
-  box-shadow: 0 0 0 0 rgba(0,214,143,0.6);
   animation: pg-pulse 2s infinite;
 }
 @keyframes pg-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(0,214,143,0.45); }
-  70% { box-shadow: 0 0 0 6px rgba(0,214,143,0); }
-  100% { box-shadow: 0 0 0 0 rgba(0,214,143,0); }
+  0% { box-shadow: 0 0 0 0 rgba(79,163,119,0.45); }
+  70% { box-shadow: 0 0 0 6px rgba(79,163,119,0); }
+  100% { box-shadow: 0 0 0 0 rgba(79,163,119,0); }
 }
 .pg-icon-btn {
-  background: var(--bg-surface-2);
+  background: var(--ink-surface-2);
   border: 1px solid var(--border);
   color: var(--text-primary);
   width: 34px; height: 34px;
@@ -165,9 +213,11 @@ input:focus-visible {
 
 /* ============================== LAYOUT ============================== */
 .pg-main {
+  position: relative;
+  z-index: 2;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 28px 24px 60px;
+  padding: 30px 24px 64px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 22px;
@@ -178,34 +228,66 @@ input:focus-visible {
 }
 
 .pg-panel {
-  background: var(--bg-surface);
+  position: relative;
+  background: var(--ink-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  padding: 20px;
+  padding: 22px 22px 20px;
+}
+/* A single punched hole + hairline, like a page pulled from a binder —
+   used sparingly (left edge only) so it reads as a detail, not a gimmick. */
+.pg-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 28px;
+  bottom: 28px;
+  width: 1px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--border) 0 6px,
+    transparent 6px 12px
+  );
+  opacity: 0.6;
 }
 
 .pg-panel-head {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin-bottom: 14px;
+  gap: 3px;
+  margin-bottom: 16px;
+}
+.pg-panel-head-row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.pg-exhibit-tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-brand);
 }
 .pg-panel-head h2 {
   font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.06em;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   text-transform: uppercase;
   color: var(--text-primary);
-  margin: 0;
+  margin: 2px 0 0;
 }
 .pg-panel-head h3 {
   font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.05em;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   margin: 0;
-  color: var(--text-muted);
+  color: var(--text-primary);
 }
 .pg-panel-sub { font-size: 12px; color: var(--text-faint); }
 
@@ -216,19 +298,19 @@ input:focus-visible {
   width: 100%;
   min-height: 320px;
   resize: vertical;
-  background: var(--bg-input);
+  background: var(--ink-input);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: 13.5px;
-  line-height: 1.55;
-  padding: 14px 16px;
+  line-height: 1.6;
+  padding: 15px 16px;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .pg-textarea::placeholder { color: var(--text-faint); }
 .pg-textarea:focus { border-color: var(--accent-brand); box-shadow: 0 0 0 3px var(--accent-brand-soft); }
-.pg-textarea-readonly { background: var(--bg-surface-2); min-height: 180px; }
+.pg-textarea-readonly { background: var(--ink-surface-2); min-height: 160px; }
 
 .pg-drop-overlay {
   position: absolute;
@@ -236,7 +318,7 @@ input:focus-visible {
   display: none;
   align-items: center;
   justify-content: center;
-  background: color-mix(in srgb, var(--accent-brand) 12%, transparent);
+  background: color-mix(in srgb, var(--accent-brand) 14%, transparent);
   border: 2px dashed var(--accent-brand);
   border-radius: var(--radius-md);
   pointer-events: none;
@@ -246,7 +328,7 @@ input:focus-visible {
   font-family: var(--font-mono);
   font-size: 14px;
   color: var(--accent-brand);
-  background: var(--bg-surface);
+  background: var(--ink-surface);
   padding: 10px 18px;
   border-radius: 999px;
   border: 1px solid var(--accent-brand);
@@ -275,7 +357,7 @@ input:focus-visible {
   margin-top: 14px;
 }
 .pg-stat {
-  background: var(--bg-surface-2);
+  background: var(--ink-surface-2);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-sm);
   padding: 10px 8px;
@@ -285,13 +367,13 @@ input:focus-visible {
   display: block;
   font-family: var(--font-mono);
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 700;
 }
 .pg-stat label {
-  font-size: 10.5px;
+  font-size: 10px;
   color: var(--text-faint);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
 .pg-actions {
@@ -302,31 +384,32 @@ input:focus-visible {
 }
 
 .pg-btn {
-  font-family: var(--font-sans);
-  font-size: 13.5px;
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
   border-radius: var(--radius-sm);
-  padding: 11px 18px;
+  padding: 12px 18px;
   border: 1px solid transparent;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   transition: transform 0.08s ease, background 0.15s, border-color 0.15s, opacity 0.15s;
 }
 .pg-btn:active { transform: scale(0.97); }
-.pg-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.pg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .pg-btn-primary {
-  background: var(--accent-brand);
-  color: #061021;
-  letter-spacing: 0.04em;
+  background: var(--text-primary);
+  color: var(--ink);
 }
-.pg-btn-primary:hover:not(:disabled) { background: color-mix(in srgb, var(--accent-brand) 88%, white 12%); }
-.pg-btn-icon { font-size: 11px; }
+.pg-btn-primary:hover:not(:disabled) { background: var(--accent-brand); color: #fff; }
+.pg-btn-icon { font-size: 10px; }
 
 .pg-btn-secondary {
-  background: var(--bg-surface-2);
+  background: var(--ink-surface-2);
   border-color: var(--border);
   color: var(--text-primary);
 }
@@ -340,16 +423,15 @@ input:focus-visible {
 .pg-btn-ghost:hover { color: var(--text-primary); border-color: var(--text-faint); }
 
 .pg-btn-small {
-  font-size: 12px;
-  padding: 7px 12px;
-  background: var(--bg-surface-2);
+  font-size: 11px;
+  padding: 8px 12px;
+  background: var(--ink-surface-2);
   border-color: var(--border);
   color: var(--text-primary);
 }
 .pg-btn-small:hover { border-color: var(--accent-brand); color: var(--accent-brand); }
 
 .pg-redacted-section { margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border); }
-.pg-redacted-section .pg-panel-head { flex-direction: row; align-items: center; justify-content: space-between; }
 
 /* ============================== RESULTS PANEL ============================== */
 .pg-empty-state {
@@ -358,7 +440,7 @@ input:focus-visible {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 60px 20px;
+  padding: 64px 20px;
   color: var(--text-faint);
 }
 .pg-empty-icon { font-size: 30px; color: var(--text-faint); margin-bottom: 10px; }
@@ -366,48 +448,98 @@ input:focus-visible {
 
 .pg-score-row {
   display: flex;
-  gap: 18px;
+  gap: 20px;
   align-items: center;
   flex-wrap: wrap;
 }
 
 .pg-score-card {
   position: relative;
-  width: 120px;
+  width: 132px;
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: visible;
 }
 .pg-score-ring { transform: rotate(-90deg); }
 .pg-score-ring-bg {
   fill: none;
   stroke: var(--border-soft);
-  stroke-width: 9;
+  stroke-width: 8;
+  stroke-dasharray: 3 6;
 }
 .pg-score-ring-fg {
   fill: none;
   stroke: var(--severity-green);
-  stroke-width: 9;
+  stroke-width: 8;
   stroke-linecap: round;
-  transition: stroke-dashoffset 0.6s ease, stroke 0.4s ease;
+  transition: stroke-dashoffset 0.7s cubic-bezier(0.22, 1, 0.36, 1), stroke 0.4s ease;
 }
 .pg-score-readout {
   position: absolute;
-  top: 38px;
+  top: 40px;
   left: 0; right: 0;
   text-align: center;
   font-family: var(--font-mono);
 }
-.pg-score-readout span { font-size: 26px; font-weight: 700; }
+.pg-score-readout span { font-size: 27px; font-weight: 700; }
 .pg-score-readout small { font-size: 11px; color: var(--text-faint); }
 .pg-score-label {
-  margin-top: 6px;
+  margin-top: 8px;
   font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+/* ---- Verdict stamp: the signature element. A rubber-stamped ring of type
+   that drops onto the case file the moment a scan resolves. Hidden until
+   app.js adds .is-stamped after rendering the score. ---- */
+.pg-stamp {
+  position: absolute;
+  top: -6px;
+  right: -34px;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  border: 2.5px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--severity-green);
+  background: color-mix(in srgb, var(--severity-green) 8%, transparent);
+  transform: rotate(-14deg) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+.pg-stamp::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.55;
+}
+.pg-stamp.is-stamped {
+  animation: pg-stamp-drop 0.5s cubic-bezier(0.17, 0.9, 0.3, 1.2) forwards;
+}
+.pg-stamp.sev-yellow { color: var(--severity-yellow); background: color-mix(in srgb, var(--severity-yellow) 8%, transparent); }
+.pg-stamp.sev-red { color: var(--severity-red); background: color-mix(in srgb, var(--severity-red) 8%, transparent); }
+@keyframes pg-stamp-drop {
+  0% { opacity: 0; transform: rotate(-30deg) scale(1.8); }
+  60% { opacity: 1; transform: rotate(-11deg) scale(0.94); }
+  100% { opacity: 1; transform: rotate(-14deg) scale(1); }
+}
+@media (max-width: 460px) {
+  .pg-stamp { right: -12px; width: 60px; height: 60px; font-size: 9.5px; }
 }
 
 .pg-summary-grid {
@@ -417,27 +549,33 @@ input:focus-visible {
   gap: 10px;
 }
 .pg-summary-tile {
-  background: var(--bg-surface-2);
+  background: var(--ink-surface-2);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-sm);
   padding: 12px;
   text-align: center;
 }
 .pg-summary-tile span { display: block; font-family: var(--font-mono); font-size: 19px; font-weight: 700; }
-.pg-summary-tile label { font-size: 10.5px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.04em; }
+.pg-summary-tile label { font-size: 10px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.05em; }
 
 .pg-export-row {
   display: flex;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 18px;
 }
 
 .pg-findings-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-top: 22px;
-  margin-bottom: 10px;
+  margin-top: 24px;
+  margin-bottom: 4px;
+}
+.pg-reveal-hint {
+  margin: 0 0 12px;
+  font-size: 11.5px;
+  color: var(--text-faint);
+  font-style: italic;
 }
 
 .pg-findings-list {
@@ -453,8 +591,9 @@ input:focus-visible {
   border: 1px solid var(--border);
   border-left-width: 4px;
   border-radius: var(--radius-md);
-  padding: 12px 14px;
-  background: var(--bg-surface-2);
+  padding: 13px 14px;
+  background: var(--ink-surface-2);
+  position: relative;
 }
 .pg-finding-card.sev-red { border-left-color: var(--severity-red); }
 .pg-finding-card.sev-yellow { border-left-color: var(--severity-yellow); }
@@ -465,15 +604,15 @@ input:focus-visible {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  margin-bottom: 6px;
+  margin-bottom: 7px;
   flex-wrap: wrap;
 }
-.pg-finding-category { font-weight: 700; font-size: 13.5px; }
+.pg-finding-category { font-weight: 700; font-size: 13px; }
 .pg-severity-chip {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   padding: 3px 8px;
   border-radius: 999px;
   font-weight: 700;
@@ -482,42 +621,84 @@ input:focus-visible {
 .pg-severity-chip.sev-yellow { color: var(--severity-yellow); background: var(--severity-yellow-soft); }
 .pg-severity-chip.sev-green { color: var(--severity-green); background: var(--severity-green-soft); }
 
+/* ---- Redaction-bar reveal: matched values ship hidden under a solid black
+   bar, exactly like the tool's own output. Click to peek; click again to
+   re-cover. This is the interaction signature of the whole page. ---- */
 .pg-finding-value {
   font-family: var(--font-mono);
   font-size: 12.5px;
   color: var(--text-primary);
-  background: var(--bg-input);
+  background: var(--ink-input);
   border: 1px solid var(--border-soft);
-  padding: 6px 8px;
+  padding: 0;
   border-radius: var(--radius-sm);
-  margin-bottom: 6px;
+  margin-bottom: 7px;
   word-break: break-all;
   white-space: pre-wrap;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  display: block;
+  font: inherit;
+  position: relative;
+  overflow: hidden;
 }
+.pg-finding-value .pg-value-text {
+  display: block;
+  padding: 7px 9px;
+}
+.pg-finding-value:not(.is-revealed) .pg-value-text {
+  color: transparent;
+  user-select: none;
+}
+.pg-finding-value:not(.is-revealed)::before {
+  content: "▮▮▮▮▮  click to reveal match  ▮▮▮▮▮";
+  position: absolute;
+  inset: 0;
+  background: var(--redaction-bar);
+  color: color-mix(in srgb, var(--text-primary) 55%, transparent);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: opacity 0.15s ease;
+}
+.pg-finding-value:not(.is-revealed):hover::before { opacity: 0.85; }
+.pg-finding-value.is-revealed { background: var(--ink-input); }
+.pg-finding-value:focus-visible { outline: 2px solid var(--accent-brand); outline-offset: 1px; }
+
 .pg-finding-meta {
-  font-size: 11.5px;
+  font-size: 11px;
+  font-family: var(--font-mono);
   color: var(--text-faint);
-  margin-bottom: 4px;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 .pg-finding-reco {
   font-size: 12.5px;
   color: var(--text-muted);
-  line-height: 1.4;
+  line-height: 1.45;
 }
 .pg-finding-reco strong { color: var(--text-primary); }
 
 /* ============================== FOOTER ============================== */
 .pg-footer {
+  position: relative;
+  z-index: 2;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px 40px;
+  padding: 0 24px 44px;
   color: var(--text-faint);
   font-size: 12px;
   text-align: center;
 }
 .pg-footer code {
   font-family: var(--font-mono);
-  background: var(--bg-surface-2);
+  background: var(--ink-surface-2);
   padding: 1px 6px;
   border-radius: 4px;
 }
@@ -529,14 +710,17 @@ input:focus-visible {
 
 /* ============================== REDUCED MOTION ============================== */
 @media (prefers-reduced-motion: reduce) {
-  .pg-dot, .pg-drop-zone.pg-scanning::after { animation: none; }
+  .pg-dot, .pg-drop-zone.pg-scanning::after, .pg-stamp.is-stamped { animation: none; }
+  .pg-stamp.is-stamped { opacity: 1; transform: rotate(-14deg) scale(1); }
   .pg-score-ring-fg { transition: none; }
+  body { transition: none; }
 }
 
 /* ============================== RESPONSIVE ============================== */
 @media (max-width: 560px) {
   .pg-stats-bar { grid-template-columns: repeat(2, 1fr); }
   .pg-score-row { flex-direction: column; align-items: stretch; }
+  .pg-score-card { align-self: center; }
   .pg-summary-grid { grid-template-columns: repeat(2, 1fr); }
   .pg-header-right { width: 100%; justify-content: space-between; }
 }
